@@ -10,7 +10,7 @@
 
 | № | Format/Ext | Progress   | Template (010 Editor) |  Description   |
 | :-- | :------- | :-- | :-- | :-- | 
-|  **1**  |  DAT  |    | DAT2.bt | Game resources file  |
+|  **1**  |  DAT  |    | [DAT2.bt](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/templates/DAT2.bt) | Game resources file  |
 ### Scripts
 * [DecodeRES.1sc](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/scripts/DecodeRES.1sc) - script to decode MM2 .dat files
 * [unpackDAT.1sc](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/scripts/unpackDAT.1sc) - script to unpack MM1 .dat files
