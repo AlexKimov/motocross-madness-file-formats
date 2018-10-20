@@ -1,0 +1,109 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local uchar FileNameTable[3000];
+local uint FilePosTable[1000];
+local uint FileSizeTable[1000];
+local uint filecount, i, k, FileIndex;
+local string Path, DATFileName;
+
+// read header
+
+void ReadHeader()
+{
+  FSkip(4); // skip signature
+  filecount = ReadInt(FTell());
+  FSkip(4);
+};
+
+string IntToStr(UINT i)
+{
+  local string Str;
+  SPrintf(Str, "%d", i);
+  return Str;
+}
+
+void ReadFileTable() 
+{
+  local string Name;
+  local char Str[32];
+  local char B[4];
+  local string s;
+  local uint Pos, Size;
+
+  for (i = 0; i < filecount; ++i)
+  {
+    Name = ReadString(FTell());
+    FSkip(32);
+    Pos = ReadInt(FTell());
+    FSkip(4);  
+    Size = ReadInt(FTell());
+    FSkip(4);
+
+    Memcpy(FileNameTable, Name, 32, k, 0);
+    FilePosTable[i] = Pos;
+    FileSizeTable[i] = Size;
+    k += 32;
+  };
+};
+
+void CreateFile(char Name[], uchar Buffer[], uint Pos, uint Size)
+{
+  CreateDir(Name);
+  FileNew("Hex");
+  WriteBytes(Buffer, 0, Size);  
+  FileSave(Path + Name);
+  FileClose();
+  FileSelect(FileIndex); 
+};
+
+void CreateDir(char Name[])
+{
+  local string Str;
+  if (Name[0] == '\\')
+    Name = StrDel(Name, 0, 1);
+
+  Str = SubStr(Name, 0, Strchr(Name, '\\'));
+  if (!DirectoryExists(Path + Str))
+    MakeDir(Path + Str);
+};
+
+void CreatePathDir()
+{
+  DATFileName = FileNameGetBase(GetFileName());
+  Path = FileNameGetPath(GetFileName()) + DATFileName + "_unpacked\\";  
+  MakeDir(Path);
+};
+
+void Unpack()
+{
+  local char FileName[32];
+  local string Name;
+  local uint Pos, Size;
+  local uchar Buffer[10485760];
+  k = 0;
+  CreatePathDir();
+  for (i = 0; i < filecount; ++i)
+  {
+    Memcpy(FileName, FileNameTable, 32, 0, k);
+    Pos = FilePosTable[i];
+    Size = FileSizeTable[i];
+
+    ReadBytes(Buffer, Pos, Size);
+    CreateFile(FileName, Buffer, Pos, Size);
+    k += 32;
+  };
+}
+
+ReadHeader();
+ReadFileTable();
+FileIndex = GetFileNum();
+Unpack();

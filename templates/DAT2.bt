@@ -1,0 +1,48 @@
+//------------------------------------------------
+//--- 010 Editor v7.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i = 0;
+
+struct {
+  char RS2[4] <name="RS2 signature">;
+} HEADER;
+
+UINT FileCount;
+
+typedef struct {
+  UINT Length;
+  char FileName[Length]; 
+  UINT Position;
+  UINT FileSize;
+} FILE_INFO <name=fileName>;
+
+string fileName(FILE_INFO &file) {
+  return file.FileName;
+};
+
+typedef struct (int arraysize) {
+  FILE_INFO array[arraysize] <optimize=false>;
+} FILE_INFO_ARRAY;
+
+FILE_INFO_ARRAY Files(FileCount) <name="File Table">;
+
+struct {
+  for (i = 0; i < FileCount; ++i) 
+  {
+    FSeek(Files.array[i].Position);
+    struct { 
+      BYTE DATA[Files.array[i].FileSize] <optimize=false>;
+    } FILE;
+  };
+}FILE_ARRAY <name="Files">;
+

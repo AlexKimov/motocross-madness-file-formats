@@ -1,0 +1,24 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  UINT A;
+  UINT DataSize;
+  UINT A;
+  UINT A;
+  UINT Length;
+  string Name;
+  UINT DataSize;
+} HEADER;
+
+BYTE DATA[HEADER.DataSize - 4];

@@ -1,0 +1,207 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local char FileNames[20000];
+local uint OffsetArray[1024], SizeArray[1024];
+local byte Data[20000000];
+local int FileByte;
+local uint i, FileCount, FI, FileIndex;
+local string Name;
+
+string StrLowerCase(uchar Str[])
+{ 
+  local uint length, i;
+  length = sizeof(Str);
+  for ( i = 0; i < length; ++i)
+  {  
+    Str[i] = ToLower(Str[i]);
+  };
+  return Str;
+}
+
+void decodeBytes(uint size)
+{
+  local uint i;
+  local byte b;
+  
+  for (i = 0; i < size; ++i)
+  {
+    b = Data[i];
+    Data[i] = b ^ FileByte;
+    FileByte += b;
+  };  
+};
+
+uint BytesToInt(byte Data[])
+{
+  return (Data[3] & 0xff) << 24 | (Data[2] & 0xff) << 16 | (Data[1] & 0xff) << 8 | (Data[0] & 0xff);
+};
+
+void ReadHeader()
+{
+  local string Magic;
+  local char n[4];
+
+  FSkip(4);
+  // magic
+  ReadBytes(Data, 4, 4);
+  decodeBytes(4);
+  Strncpy(Magic, Data, 4);
+  FSkip(4); 
+  // number of files
+  ReadBytes(Data, FTell(), 4);
+  decodeBytes(4);
+  FSkip(4);
+
+  FileCount = BytesToInt(Data);
+
+  FileSelect(FI); 
+  WriteBytes(Magic, 0, 4); 
+  FSkip(4); 
+  WriteInt(4, FileCount);
+  FSkip(4);  
+  FileSelect(FileIndex);
+};
+
+void WriteData(uint length)
+{
+  FileSelect(FI);  
+  WriteBytes(Data, FTell(), length);
+  FSkip(length);
+  FileSelect(FileIndex);
+};
+
+void ReadFileTable() 
+{
+  local uchar Name[256];
+  local int Length, Size, Offset, namepos;
+  local string s;
+  for (i = 0; i < FileCount; ++i)
+  {
+    ReadBytes(Data, FTell(), 4);  
+    decodeBytes(4);
+    Length = Data[0];
+    WriteData(4);
+    FSkip(4); 
+    // Name
+    ReadBytes(Data, FTell(), Length);  
+    decodeBytes(Length);
+    WriteData(Length);
+    FSkip(Length);
+    FileNames[namepos] = Length;
+    Memcpy(FileNames, Data, Length, namepos + 1, 0);
+    namepos += Length + 1;
+    // Offset
+    ReadBytes(Data, FTell(), 4); 
+    decodeBytes(4); 
+    WriteData(4);
+    Offset = BytesToInt(Data);
+    OffsetArray[i] = Offset;   
+    FSkip(4);
+    // Size
+    ReadBytes(Data, FTell(), 4);  
+    decodeBytes(4); 
+    WriteData(4);
+    Size = BytesToInt(Data);
+    SizeArray[i] = Size;   
+    FSkip(4);  
+  };
+};
+
+void ReadFiles() 
+{
+  local int Offset, Size, namepos, Length;
+  local string Name, Str;
+  local uchar ext[4]; 
+  for (i = 0; i < FileCount; ++i)
+  {
+    Offset = OffsetArray[i];
+    Size = SizeArray[i]; 
+    //
+    FileSelect(FileIndex);       
+    // 
+    Memcpy(Name, FileNames, FileNames[namepos], 0, namepos + 1);
+    ext = FileNameGetExtension(Name);
+    switch (StrLowerCase(ext))
+    {
+      case "pal8":
+        FileByte = 128; 
+        //
+        ReadBytes(Data, FTell(), 8); 
+        decodeBytes(8);          
+        WriteData(Size); 
+        //
+        ReadBytes(Data, FTell(), 4); 
+        decodeBytes(4); 
+        Length = BytesToInt(Data);    
+        WriteData(4);
+        ReadBytes(Data, FTell(), Length); 
+        decodeBytes(Length);  
+        WriteData(Length);
+        // 
+        ReadBytes(Data, FTell(), 768);
+        decodeBytes(768); 
+        WriteData(768);
+        FileSelect(FI);           
+        WriteInt(FTell(), 0);
+        FSkip(4);                                           
+      break;
+      case "pal8":
+        FileByte = 128; 
+        //
+        ReadBytes(Data, FTell(), 8); 
+        decodeBytes(8);          
+        WriteData(Size); 
+        //
+        ReadBytes(Data, FTell(), 4); 
+        decodeBytes(4); 
+        Length = BytesToInt(Data);    
+        WriteData(4);
+        ReadBytes(Data, FTell(), Length); 
+        decodeBytes(Length);  
+        WriteData(Length);
+        // 
+        ReadBytes(Data, FTell(), 768);
+        decodeBytes(768); 
+        WriteData(768);
+        FileSelect(FI);           
+        WriteInt(FTell(), 0);
+        FSkip(4);                                           
+      break;
+      default: 
+        ReadBytes(Data, FTell(), Size);
+        FSkip(Size + 4);
+        FileByte = 128;  
+        decodeBytes(Size);   
+        WriteData(Size);
+        FileSelect(FI);        
+        WriteInt(FTell(), 0);
+        FSkip(4);
+      break;
+    };
+    namepos += FileNames[namepos] + 1;
+  };
+};
+
+Name = GetFileName();
+FileIndex = GetFileNum();
+
+FI = FileNew("Hex");
+FileSelect(FileIndex);
+
+FileByte = 128;
+ReadHeader();
+ReadFileTable();
+ReadFiles(); 
+
+FileSelect(FI);  
+FileSave(Name + ".DAT");
+//FileClose();

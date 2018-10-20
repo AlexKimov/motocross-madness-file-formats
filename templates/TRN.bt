@@ -1,0 +1,215 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint i;
+
+struct {
+  char Magic[4];
+  UINT Version; // 2 const
+} HEADER;
+
+UINT TextureFormat; // if TextureFormat != 8 then = 1
+if (TextureFormat)
+{
+  UINT Unknown; // if ColorCount == 236, = 10 else 0
+  UINT ColorCount;
+  UINT Data; // 1 const
+  struct {
+    if (Data) 
+    {
+      // COLORMAP
+      UINT DataSize;
+      if (DataSize == 768)
+        BYTE COLORMAPDATA[768]; // less than 255
+      else
+        BYTE COLORMAPDATA[DataSize]; // more then 256
+      //        
+      UINT DataSize;
+      if (DataSize == 32768)
+        BYTE DATA2[32768];
+      else
+        BYTE DATA2[DataSize];
+      //        
+      UINT DataSize;
+      if (DataSize == 65536)
+        BYTE DATA3[65536];
+      else
+        BYTE DATA3[DataSize];          
+    }
+    else
+    {
+      BYTE COLORMAP[768];
+      BYTE DATA2[32768];
+      BYTE DATA3[65536];
+    }
+  } COLOR_MAP_DATA;
+};
+
+UINT U;
+FLOAT Unknown;
+UINT Count;
+
+UINT Position[Count];
+if (Count) 
+{
+  struct {
+    for (i = 0; i < Count; ++i)
+    {
+      struct {
+        INT A;
+        INT B;    
+        if (B <= A)
+          BYTE DATA4[B];
+        else
+          BYTE DATA4[A];  
+        INT A;
+        INT B;    
+        if (B <= A)
+          BYTE DATA5[B];
+        else
+          BYTE DATA5[A];  
+        INT A;
+        INT B;    
+        if (B <= A)
+          BYTE DATA6[B];
+        else
+          BYTE DATA6[A];
+      } DT;    
+    };
+  } DS; 
+};
+
+UINT K;
+UINT G;
+
+uint getNumber(uint i)
+{
+  local uint result;
+  switch ( i )
+  {
+    case 1:
+    case 9:
+      result = 3;
+      break;
+    case 2:
+    case 7:
+      result = 2;
+      break;
+    case 3:
+    case 8:
+      result = 2;
+      break;
+    case 4:
+    case 6:
+      result = 1;
+      break;
+    case 5:
+      result = 3;
+      break;
+    case 10:
+    case 13:
+      result = 2;
+      break;
+    case 11:
+    case 14:
+      result = 2;
+      break;
+    case 12:
+    case 15:
+      result = 4;
+      break;
+    default:
+      result = 0;
+      break;
+  };
+  return result; 
+};
+
+if (G) 
+{
+  struct {
+    UINT A; 
+    UINT B; 
+    UINT C;  
+    FSkip(A*B*getNumber(C));
+    FSkip(A*B*getNumber(C)/4);
+  } I1;
+};
+
+if (K) 
+{
+  struct {
+    UINT A; 
+    UINT B; 
+    UINT C;
+    FSkip(A*B*getNumber(C)*K);
+    FSkip(K*A*B*getNumber(C)/4); 
+  } I2;
+};
+
+switch (U)
+{
+  case 0:
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown; 
+  break;
+
+  case 1:
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown; 
+  break;
+
+  case 2:
+  case 3:
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown;
+    UINT Unknown; 
+};

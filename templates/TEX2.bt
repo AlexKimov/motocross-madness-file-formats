@@ -1,0 +1,70 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct {
+  char RS2[4] <name="RS2 Signature">;
+  UINT FileCount;
+} HEADER;
+
+typedef struct {
+  UINT Length;
+  char FileName[Length]; 
+  UINT Position;
+  UINT FileSize;
+} FILE <name=fileName>;
+
+string fileName(FILE &file) {
+  return file.FileName;
+};
+
+typedef struct (int arraysize) {
+  FILE array[arraysize] <optimize=false>;
+} FILE_ARRAY;
+
+FILE_ARRAY Files(HEADER.FileCount) <name="File Table">;
+
+typedef struct {
+  struct {
+    UINT MN;
+    UINT Depth;
+    UINT Width;
+    UINT Height;
+    UINT Length;
+    char TextureName[Length]; 
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count;
+    UINT Count; 
+    UINT DataSize;   
+  } HEADER;
+
+  BYTE Data[HEADER.DataSize - 4];
+} TEXTURE <name=texName>;
+
+string texName(TEXTURE &tex) {
+  return tex.HEADER.TextureName;
+};
+
+typedef struct (int arraysize) {
+  TEXTURE array[arraysize] <optimize=false>;
+} TEXTURE_ARRAY;
+
+TEXTURE_ARRAY Textures(HEADER.FileCount) <name="Textures">;
+
+
+

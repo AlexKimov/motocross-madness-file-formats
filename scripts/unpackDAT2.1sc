@@ -1,0 +1,110 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+
+local uchar FileNameTable[30000];
+local uint FilePosTable[1000];
+local uint FileSizeTable[1000];
+local uint filecount, i, k, FileIndex;
+local string Path, DATFileName;
+
+// read header
+
+void ReadHeader()
+{
+  FSkip(4); // skip signature
+  filecount = ReadInt(FTell());
+  FSkip(4);
+};
+
+uint BytesToInt(uchar Data[])
+{
+  return (Data[3] & 0xff) << 24 | (Data[2] & 0xff) << 16 | (Data[1] & 0xff) << 8 | (Data[0] & 0xff);
+};
+
+string IntToStr(UINT i)
+{
+  local string Str;
+  SPrintf(Str, "%d", i);
+  return Str;
+}
+
+void ReadFileTable() 
+{ 
+  local uchar Name[256];
+  //local char B[4];
+  local uchar S[4];
+  local uint Pos, Size, Length;
+
+  for (i = 0; i < filecount; ++i)
+  {
+    Length = ReadInt(FTell()); 
+    FSkip(4);     
+    ReadBytes(Name, FTell(), Length);
+    FSkip(Length);
+    Pos = ReadInt(FTell());
+    FSkip(4);  
+    Size = ReadInt(FTell());
+    FSkip(4);
+
+    ConvertDataToBytes(Length, S);
+    Memcpy(FileNameTable, S, 4, k, 0);
+    Memcpy(FileNameTable, Name, Length, k + 4, 0);
+    FilePosTable[i] = Pos;
+    FileSizeTable[i] = Size;
+    k += Length + 4;
+  };
+};
+
+void CreateFile(char Name[], uchar Buffer[], uint Size)
+{
+  FileNew("Hex");
+  WriteBytes(Buffer, 0, Size);  
+  FileSave(Path + Name);
+  FileClose();
+  FileSelect(FileIndex); 
+};
+
+void CreatePathDir()
+{
+  DATFileName = FileNameGetBase(GetFileName());
+  Path = FileNameGetPath(GetFileName()) + DATFileName + "_unpacked\\";  
+  MakeDir(Path);
+};
+
+void Unpack()
+{
+  local char FileName[256];
+  local uchar S[4];
+  local uint Pos, Size, Length;
+  local uchar Buffer[20000000];
+  k = 0;
+  CreatePathDir();
+
+  for (i = 0; i < filecount; ++i)
+  {
+    Memcpy(S, FileNameTable, 4, 0, k);
+    Length = BytesToInt(S); 
+
+    Memcpy(FileName, FileNameTable, Length, 0, k + 4);
+
+    Pos = FilePosTable[i];
+    Size = FileSizeTable[i];
+
+    ReadBytes(Buffer, Pos, Size);
+    CreateFile(FileName, Buffer, Size);
+    k += Length + 4;
+  };
+}
+
+ReadHeader();
+ReadFileTable();
+FileIndex = GetFileNum();
+Unpack();
