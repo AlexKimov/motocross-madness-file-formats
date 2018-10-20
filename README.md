@@ -8,6 +8,7 @@
 |  **2**  | TRN  |    | [TRN.bt](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/templates/TRN.bt) | Track data  |
 |  **3**  | VUB   |    | [VUB.bt](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/templates/VUB.bt) | Animations |
 
+#### Motocross Madness 2 (2000)
 | № | Format/Ext | Progress   | Template (010 Editor) |  Description   |
 | :-- | :------- | :-- | :-- | :-- | 
 |  **1**  |  DAT  |    | [DAT2.bt](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/templates/DAT2.bt) | Game resources file  |
