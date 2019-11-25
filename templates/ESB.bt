@@ -1,0 +1,106 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+// This is a work in progress
+
+struct String
+{
+    unsigned byte strLen;
+    char name[strLen];
+
+};
+
+struct EcoDefinition
+{
+    byte kind;
+    String name;
+    String lodName;
+    float MeanHeight;
+    float MinHeight;
+    float MaxHeight;
+    float MeanRadius;
+    float MinRadius;
+    float MaxRadius;    
+    float parameters[5];
+    int size[2];
+    float parameters2[10];
+    byte uk2;
+    int collidersCnt;
+    
+    struct Point
+    {
+        float x, y, z;
+    };
+    struct Collider
+    {
+        int kind;
+        Point center;
+        if(kind == 2) //sphere
+        {
+            int uk[3];
+            float radius;
+            int uk2;
+        }
+        else if(kind == 1) // cylinder
+        {
+            int uk[3];
+            float radius;
+            float height;
+        }
+        else if(kind == 3) // RADIUSEDLINE
+        {
+            Point end;
+            float radius;
+            int uk;
+        }
+    };
+    
+    Collider colliders[collidersCnt]<optimize=false>;
+    
+    //Point centers[collidersCnt[1]*collidersCnt[0]];
+    //byte uk [12];
+    //float radius[collidersCnt[0]];
+};
+
+int count;
+byte uk;
+EcoDefinition ecosystem[11]<optimize=false>;
+
+// This is zeros free space, it size looks random
+local int i = 0;
+do
+{
+    i += 1;
+}
+while(ReadByte( i + FTell() ) == 0 );
+byte someSpace[i];
+
+
+byte uk;
+String probMapFileName;
+int zero;
+if(zero == 0)
+{
+    byte uk;
+    String placementMapFileName;
+    int treesNumber;
+}
+else
+    local int treesNumber = zero;
+// this takes 9 bytes
+struct Tree
+{
+    byte kind;
+    ushort x, y, z <comment="divide by 10 for point shift">; // those are divided by 10
+    short extra; // unknown
+};
+Tree trees[treesNumber];

@@ -1,0 +1,29 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+struct boneTransform
+{
+    byte boneIndex;
+    float translation[9];  
+};
+
+int framesCnt;
+int bonesPerFrame;
+
+struct frame
+{
+    boneTransform transforms[bonesPerFrame];
+};
+
+frame frames[framesCnt];
+int uk;

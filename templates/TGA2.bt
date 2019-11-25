@@ -1,0 +1,42 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+// This is a work in progress
+//------------------------------------------------
+
+int kind;
+int data_size;
+int width;
+int height;
+
+int str_len;
+char palette[str_len];
+
+if(kind == 0xf  || kind==0x16 || kind == 0x1a)
+{
+    if (width == 256)
+        int offsets[9];
+    else if (width == 128)
+        int offsets[8];
+    else if (width == 64)
+        int offsets[7];
+}
+/*else if(kind == 0x0B)
+
+/*
+
+    int offsets[9];
+if()
+    int offsets[8];
+*/
+
+int data_size2;
+byte data[data_size2-4];

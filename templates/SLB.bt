@@ -1,0 +1,103 @@
+//------------------------------------------------
+//--- 010 Editor v8.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: Any
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+
+struct vertex
+{
+    float point[3];
+    int keyCD;
+    int keyFFFF; // sometimes is 31 31 89 FF
+    int materialRef; // TODO where is materi8al ref?
+    float coord[2];
+};
+
+struct normal
+{
+    float x, y, z;
+};
+struct triangle
+{
+    short A, B, C;
+};
+struct uv
+{
+    float u, v;
+};
+
+struct body
+{
+    char ObjName[128];
+    float transform[16];
+    int uk0; // always 0?
+    int NumberOfLOD; // always 1?
+    float uk1[13];
+};
+
+struct material
+{
+    char textureFileName[64];
+    int key555;
+    char someStr[12];
+    int uk[7];
+    float color[4]; //???
+    short coss;
+    float color2;
+};
+
+struct vertexGroup
+{
+    //int group[7]; // old thing
+    int uk;
+    int vertexCnt;
+    int uk2[3];
+};
+struct vertexGroupList
+{
+    int bodyIndex;
+    int startVertexIndex;
+};
+
+struct mesh
+{   
+    int vGroupCnt; //?
+    int NumberOfVertices;//?
+    int NumberOfFaces; 
+    int NumberOfMaterials; //?
+    vertex verices[NumberOfVertices*2];
+    normal normals[NumberOfVertices];
+    triangle triangleDefs[NumberOfFaces];
+    uv uvs[NumberOfVertices];
+    int MaterialIndex; //??
+    vertexGroup vertexGroups[vGroupCnt]; 
+    vertexGroupList vertexGroupLists[vGroupCnt];
+};
+
+struct bodyDef
+{
+    int NumberOfSurfaces;
+    mesh meshes[NumberOfSurfaces]<optimize=false>;
+};
+
+int NumberOfBodies;
+// Object Hierarchy
+body bodies[NumberOfBodies];
+
+int keyFFF;
+int bodiesHierarchy[NumberOfBodies-1];
+int NumberOfMaterials;
+material materials[NumberOfMaterials];
+
+
+int NumberOfLOD;
+float AutoLOD[NumberOfLOD]; // LOD distances?
+bodyDef bodyDefs[NumberOfLOD]<optimize=false>;
