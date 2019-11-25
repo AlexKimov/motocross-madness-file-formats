@@ -1,0 +1,40 @@
+//Track SPLINES
+
+struct Point3D
+{
+    unsigned byte kind;
+    float x, y, z;
+};
+struct Value
+{
+    unsigned byte kind;
+    float val;
+};
+
+struct Point
+{
+    unsigned byte kind;
+    if(kind == 8)
+    {
+        SetForeColor( cRed );
+        Point3D splinePoints[3];
+        Value val;
+    }
+    else if(kind == 14)
+        float val[2];
+    else if(kind >= 15)
+        float val[10];
+    else
+        float val;
+
+};
+
+
+//Point points[33] <optimize=false>;
+do
+{
+    Point points <optimize=false>;
+}
+while(points.kind != 16);
+
+
