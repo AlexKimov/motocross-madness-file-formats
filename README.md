@@ -20,3 +20,6 @@
 * [DecodeRES.1sc](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/scripts/DecodeRES.1sc) - script to decode MM2 .dat files
 * [unpackDAT.1sc](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/scripts/unpackDAT.1sc) - script to unpack MM1 .dat files
 * [unpackDAT2.1sc](https://github.com/AlexKimov/motocross-madness-file-formats/blob/master/scripts/unpackDAT2.1sc) - script to unpack MM2 .dat files
+
+### Tool
+Program in C for unpacking MCM2 archive formats and tga conversion. Build with `make`. Example usage: `./mcm2tool.out c 4Runner_Blue_08.tga`, `./mcm2tool.out e AIRFIELD.ENV` (make sure to create OUTPUT directory).
